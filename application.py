@@ -44,6 +44,7 @@ def run_image_search_app():
         for idx, (image_path, dist) in enumerate(closest_vectors, 1):
                 img_path = image_path.replace("emb_data/", "input_images/")
                 image_paths.append(img_path)
+                print(image_paths)
                 captions.append(f"Rank {idx}: {img_path}")
         df = pd.DataFrame({"image_path": image_paths, "caption": captions})
         csv = df.to_csv(index=True).encode("utf-8")
