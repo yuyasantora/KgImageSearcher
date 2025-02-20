@@ -1,0 +1,33 @@
+{
+    "traffic_light_sd_20210001-0287.jpg": [
+        "a bus is on the road: X:530 Y:525 Width:147 Height:76",
+        "a brown building next to the street: X:5 Y:61 Width:346 Height:514",
+        "the back of a white truck: X:525 Y:391 Width:155 Height:207",
+        "a blue and white sign: X:415 Y:247 Width:43 Height:40",
+        "the sky is blue: X:0 Y:4 Width:1278 Height:453",
+        "traffic light is green: X:496 Y:333 Width:66 Height:40",
+        "the road is gray: X:2 Y:525 Width:1276 Height:192",
+        "white sign hanging from pole: X:410 Y:282 Width:46 Height:46",
+        "a red and white banner: X:12 Y:335 Width:325 Height:125",
+        "white car parked on street: X:504 Y:526 Width:35 Height:42",
+        "a tall gray pole: X:915 Y:164 Width:81 Height:410",
+        "a tall gray pole: X:50 Y:72 Width:169 Height:502",
+        "a traffic light: X:1202 Y:273 Width:52 Height:43"
+    ],
+    "traffic_light_sd_20210001-0285.jpg": [
+        "the car is white: X:3 Y:437 Width:321 Height:270",
+        "silver car parked on the street: X:429 Y:521 Width:100 Height:76",
+        "the back of a white truck: X:535 Y:375 Width:175 Height:239",
+        "grey bus on road: X:540 Y:527 Width:169 Height:89",
+        "the sky is blue: X:0 Y:5 Width:1280 Height:419",
+        "a blue sign with a white arrow: X:233 Y:360 Width:43 Height:46",
+        "tree in front of building: X:263 Y:372 Width:107 Height:203",
+        "a person riding a motorcycle: X:768 Y:528 Width:37 Height:50",
+        "a utility pole: X:379 Y:159 Width:128 Height:434",
+        "traffic light is green: X:839 Y:383 Width:53 Height:33",
+        "the dark gray road: X:11 Y:542 Width:1249 Height:163",
+        "a tall wooden pole: X:960 Y:140 Width:99 Height:424",
+        "a woman walking on the sidewalk: X:300 Y:506 Width:40 Height:80",
+        "a white sign on the building: X:228 Y:399 Width:46 Height:60"
+    ]
+}

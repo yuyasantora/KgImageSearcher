@@ -1,0 +1,6 @@
+streamlit
+numpy
+pandas
+Pillow
+openai
+faiss-cpu  # FAISSを使用している場合
