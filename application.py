@@ -57,7 +57,7 @@ def run_image_search_app():
         )
         image_list = [Image.open(img_path) for img_path in image_paths[:9]]
         for i in range(0, len(image_list), 3):
-            cols = st.columns([1, 1, 1, 1, 1])  # 空の列の幅を1に設定
+            cols = st.columns([1, 0.2, 1, 0.2, 1])  # 空の列の幅を1に設定
             for j, col in enumerate(cols[::2]):  # 画像を配置する列を選択
                 if i + j < len(image_list):
                     img = image_list[i + j]
