@@ -55,7 +55,7 @@ def run_image_search_app():
             file_name = "search_result.csv",
             mime = "text/csv"
         )
-        image_list = [Image.open(img_path) for img_path in image_paths[:9]]
+        image_list = [Image.open(img_path) for img_path in image_paths[:download_csv_index_number]]
         for i in range(0, len(image_list), 3):
             cols = st.columns([1, 0.2, 1, 0.2, 1])  # 空の列の幅を1に設定
             for j, col in enumerate(cols[::2]):  # 画像を配置する列を選択
