@@ -42,7 +42,7 @@ def run_image_search_app():
         image_paths = []
         captions = []
         for idx, (image_path, dist) in enumerate(closest_vectors, 1):
-                img_path = image_path.replace("emb_data/", "GRiT/input_images/")
+                img_path = image_path.replace("emb_data/", "input_images/")
                 image_paths.append(img_path)
                 captions.append(f"Rank {idx}: {img_path}")
         df = pd.DataFrame({"image_path": image_paths, "caption": captions})
