@@ -44,9 +44,8 @@ def run_image_search_app():
         for idx, (image_path, dist) in enumerate(closest_vectors, 1):
                 img_path = image_path.replace("emb_data/", "input_images/")
                 image_paths.append(img_path)
-                print(image_paths)
                 captions.append(f"Rank {idx}: {img_path}")
-        df = pd.DataFrame({"image_path": image_paths, "caption": captions})
+        df = pd.DataFrame({ "caption": captions})
         csv = df.to_csv(index=True).encode("utf-8")
         # 上位n件のデータを含んだcsv
         st.download_button(
@@ -57,7 +56,7 @@ def run_image_search_app():
         )
         image_list = [Image.open(img_path) for img_path in image_paths[:download_csv_index_number]]
         for i in range(0, len(image_list), 3):
-            cols = st.columns([1, 0.2, 1, 0.2, 1])  # 空の列の幅を1に設定
+            cols = st.columns([1.5, 0.2, 1.5, 0.2, 1.5])  # 空の列の幅を設定
             for j, col in enumerate(cols[::2]):  # 画像を配置する列を選択
                 if i + j < len(image_list):
                     img = image_list[i + j]
