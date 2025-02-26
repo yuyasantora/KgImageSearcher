@@ -11,7 +11,20 @@ import subprocess
 import io
 
 
+
+# 表示するテキストを切り詰める
+def truncate_text_by_chars(text, max_chars=200):
+    if len(text) > max_chars:
+        return text[:max_chars] + '...'
+    return text
+
+def format_caption(rank, description):
+    return f"**Rank {rank}:**\n{description}"
+
 def run_image_search_app():
+    # セッションステートの初期化
+    if 'search_results' not in st.session_state:
+        st.session_state['search_results'] = []
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
     st.title("KG 画像検索")
     st.write("よく使用される検索ワード")
@@ -27,7 +40,10 @@ def run_image_search_app():
             if st.button(keyword, use_container_width=True):
                 st.session_state['search_text'] = keyword
     search_text = st.text_input("検索したい文言を入力してください: ", value=st.session_state['search_text'])
-    download_csv_index_number = st.number_input("検索結果の上位何件のデータをダウンロードしますか？: ", min_value=9, max_value=5000, value=9, step=1)
+    download_csv_index_number = st.number_input(
+        "検索結果の上位何件のデータをダウンロードしますか？: ",
+        min_value=9, max_value=5000, value=9, step=1
+    )
     if st.button("Search"):
         response = client.embeddings.create(
             input=search_text,
@@ -39,13 +55,34 @@ def run_image_search_app():
         index = create_index_faiss(["emb_data"])
         closest_vectors = find_closest_vectors_faiss(ref_vector, "index.faiss", download_csv_index_number)
         
+        # 検索結果をセッションステートに保存
+        st.session_state['search_results'] = closest_vectors
+
+    # 検索結果がある場合に表示
+    if st.session_state['search_results']:
         image_paths = []
+        text_paths = []
+        full_descriptions = []
         captions = []
-        for idx, (image_path, dist) in enumerate(closest_vectors, 1):
-                img_path = image_path.replace("emb_data/", "input_images/")
-                image_paths.append(img_path)
-                captions.append(f"Rank {idx}: {img_path}")
-        df = pd.DataFrame({ "caption": captions})
+        for idx, (image_path, dist) in enumerate(st.session_state['search_results'], 1):
+            img_path = image_path.replace("emb_data/", "input_images/")
+            image_paths.append(img_path)
+            text_path = image_path.replace("emb_data/", "text_data/")
+            text_path = text_path + ".txt"
+            text_paths.append(text_path)
+            
+            # 説明文を読み込み
+            with open(text_path, "r") as f:
+                description = f.read()
+            full_descriptions.append(description)
+            
+            # 短縮された説明文をキャプションに使用
+            truncated_description = truncate_text_by_chars(description)
+            captions.append(f"{truncated_description}")
+
+
+
+        df = pd.DataFrame({"image_path": image_paths, "description": full_descriptions})
         csv = df.to_csv(index=True).encode("utf-8")
         # 上位n件のデータを含んだcsv
         st.download_button(
@@ -54,9 +91,10 @@ def run_image_search_app():
             file_name = "search_result.csv",
             mime = "text/csv"
         )
+        
         image_list = [Image.open(img_path) for img_path in image_paths[:download_csv_index_number]]
         for i in range(0, len(image_list), 3):
-            cols = st.columns([1.5, 0.2, 1.5, 0.2, 1.5])  # 空の列の幅を設定
+            cols = st.columns([1.5, 0.2, 1.5, 0.2, 1.5])  # 空の列の幅を1に設定
             for j, col in enumerate(cols[::2]):  # 画像を配置する列を選択
                 if i + j < len(image_list):
                     img = image_list[i + j]
@@ -73,6 +111,7 @@ def run_image_search_app():
                             file_name=f"image_{i + j}.jpg",
                             mime="image/jpeg"
                         )
+        
                     
 
 def convert_image_to_vector():
@@ -85,7 +124,7 @@ def convert_image_to_vector():
 
     if uploaded_files:
         save_dir = "GRiT/input_images"
-        os.makedirs(save_dir, exist_ok=True)
+        #os.makedirs(save_dir, exist_ok=True)
 
         for uploaded_file in uploaded_files:
             # 画像の保存パスを決定
@@ -93,7 +132,7 @@ def convert_image_to_vector():
 
             # ファイルが既に存在するか確認
             if os.path.exists(image_path):
-                st.info(f"File already exists and will be skipped: {uploaded_file.name}")
+                st.info(f"ファイルはすでに存在しています: {uploaded_file.name}")
                 continue
 
             # 画像を表示
@@ -110,14 +149,13 @@ def convert_image_to_vector():
             'python', 'GRiT/demo.py',
             '--test-task', 'DenseCap',
             '--config-file', 'GRiT/configs/GRiT_B_DenseCap_ObjectDet.yaml',
-            '--input', 'GRiT/input_images',
+            '--input', 'input_images',
             '--output', 'GRiT/visualization',
             '--opts', 'MODEL.WEIGHTS', 'GRiT/models/grit_b_densecap_objectdet.pth'
             ], capture_output=True, text=True)
             
-        st.write("GRiT Execution Output:")
-        print(result)
-        st.text(result.stdout)
+        
+        
         
 
 
